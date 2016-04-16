@@ -1,0 +1,37 @@
+---
+title: "viz"
+author: "E Wetherley"
+date: "April 16, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Scatterplot
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(gapminder)
+
+# preview data
+gapminder
+
+# get range of available data
+summary(gapminder)
+
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

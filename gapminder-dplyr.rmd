@@ -1,0 +1,90 @@
+---
+title: "GApminder Analysis with dplyr"
+author: "E Wetherley"
+date: "April 16, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exploration
+
+
+```{r}
+#install.packages("dplyr") #do this only once!
+library(dplyr)
+#install.packages("gapminder")
+library(gapminder)
+
+```
+
+
+```{r}
+##Subset Rows
+#with gapminder
+filter(gapminder, country == "Rwanda")
+
+#without gapminder
+subset(gapminder, country == "Rwanda")
+
+# The pipe operator! %>% (shortcut: ctrl shift m)
+# from the magrittr package in dplyr
+
+gapminder %>% head
+head(gapminder) #same as
+# the function %>% takes whatever is on the left and passes it as the first argument into the function
+# on the right
+
+
+## Subset Columns 
+#with select()
+select(gapminder, year, lifeExp)
+
+# with a pipe
+gapminder %>% select(year, lifeExp)
+
+
+gapminder %>% 
+  select(year, lifeExp) %>%
+  head(4) # you can nest %>%, so this says: take gapminder data, select 2 cols (y and LE), and give me the first 4 rows.
+
+#Calculate mean gdp of cambodia
+gapminder %>%
+  filter(country == "Cambodia") %>% 
+  #select(country, year, pop, gdpPercap)
+  select(-continent, -lifeExp) #the - means "select not" continent, or "select not" life expectancy
+#compare to base R
+gapminder[gapminder$country == "Cambodia", c("country", "year", "pop", "gdpPercap")]
+
+# Continue with mutate
+gapminder %>%
+  mutate(gdp = pop*gdpPercap) #calculate a new data column (gdp) of gdp using other data columns
+
+
+#exercise: add mutate to the previous analysis
+gapminder %>%  #use gapminder dataset
+  #filter(country == "Cambodia") %>% #only look at cambodia
+  select(-continent, -lifeExp) %>%  #only look at columns of interest
+  mutate (gdp = pop*gdpPercap) %>%  # calculate the gdp using the columns
+  group_by(country) %>% #only look at countries as the grouping variable
+  summarise(mean_gdp = mean(gdp)) %>% #calculate the mean
+  ungroup() #best practices- always ungroup after grouping!
+
+## with a for loop
+# for (country in all_countries){
+#   our analysis, per country
+# }
+
+
+```
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
